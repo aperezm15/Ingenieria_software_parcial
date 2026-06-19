@@ -56,4 +56,15 @@ public class MedicoRepositoryAdapter implements MedicoRepositoryPort {
         }
         return medicoDomain;
     }
+
+    @Override
+    public List<Medico> listarTodos() {
+        // 1. Buscamos todas las entidades en Supabase
+        List<MedicoEntity> entidades = repository.findAll();
+
+        // 2. Las mapeamos una a una a tu modelo de Dominio Puro usando tu helper existente
+        return entidades.stream()
+                .map(this::mapearADominio)
+                .collect(Collectors.toList());
+    }
 }

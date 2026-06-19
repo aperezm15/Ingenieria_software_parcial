@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.udc.parcial.domain.models.Medico;
 import org.udc.parcial.domain.ports.in.RegistrarMedicoUseCase;
+import org.udc.parcial.domain.ports.out.MedicoRepositoryPort;
 import org.udc.parcial.infrastructure.input.rest.dto.MedicoRequestDTO;
 import org.udc.parcial.infrastructure.infrastructure.input.rest.dto.MedicoResponseDTO;
 
@@ -16,31 +17,39 @@ import java.util.stream.Collectors;
 public class MedicoRestController {
 
     private final RegistrarMedicoUseCase registrarMedicoUseCase;
+    private final MedicoRepositoryPort medicoRepositoryPort;
 
-    // Inyección limpia por constructor
-    public MedicoRestController(RegistrarMedicoUseCase registrarMedicoUseCase) {
+    public MedicoRestController(RegistrarMedicoUseCase registrarMedicoUseCase, MedicoRepositoryPort medicoRepositoryPort) {
         this.registrarMedicoUseCase = registrarMedicoUseCase;
+        this.medicoRepositoryPort = medicoRepositoryPort;
     }
 
     @PostMapping
     public ResponseEntity<MedicoResponseDTO> registrarMedico(@RequestBody MedicoRequestDTO request) {
-        // 1. Convertir DTO de entrada al modelo de Dominio usando tu constructor con reglas de negocio
-        Medico nuevoMedico = new Medico(
-                request.getId(),
-                request.getNombreCompleto(),
-                request.getSpecialty()
-        );
-
-        // 2. Ejecutar el caso de uso que tienes definido en tus puertos de entrada
+        Medico nuevoMedico = new Medico(request.getId(), request.getNombreCompleto(), request.getSpecialty());
         Medico medicoRegistrado = registrarMedicoUseCase.ejecutarRegistro(nuevoMedico);
-
-        // 3. Mapear el resultado de dominio al DTO de salida
-        MedicoResponseDTO response = mapearADto(medicoRegistrado);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapearADto(medicoRegistrado));
     }
 
-    // Helper privado para transformar el dominio al formato JSON de salida
+    // Endpoint 1: Obtener un médico por su Cédula
+    @GetMapping("/{id}")
+    public ResponseEntity<MedicoResponseDTO> obtenerMedicoPorId(@PathVariable String id) {
+        return medicoRepositoryPort.buscarPorId(id)
+                .map(medico -> ResponseEntity.ok(mapearADto(medico)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // Endpoint 2: Listar todos los médicos de la base de datos
+    @GetMapping
+    public ResponseEntity<List<MedicoResponseDTO>> listarTodosLosMedicos() {
+        List<Medico> medicos = medicoRepositoryPort.listarTodos();
+        List<MedicoResponseDTO> respuesta = medicos.stream()
+                .map(this::mapearADto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(respuesta);
+    }
+
+    // Helper privado de mapeo
     private MedicoResponseDTO mapearADto(Medico medico) {
         List<MedicoResponseDTO.HorarioDTO> horariosDto = medico.getAgendaDisponibilidad().stream()
                 .map(h -> new MedicoResponseDTO.HorarioDTO(h.fechaHoraInicio(), h.fechaHoraFin(), h.disponible()))
