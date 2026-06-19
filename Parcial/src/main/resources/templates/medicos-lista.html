@@ -24,21 +24,21 @@
             <div class="p-4 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="users" class="w-6 h-6"></i></div>
             <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Médicos</p>
-                <h3 class="text-2xl font-bold text-slate-800">24</h3>
+                <h3 class="text-2xl font-bold text-slate-800" th:text="${totalMedicos != null ? totalMedicos : 0}">0</h3>
             </div>
         </div>
         <div class="bg-white border border-slate-100 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
             <div class="p-4 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="check-circle" class="w-6 h-6"></i></div>
             <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Disponibles Hoy</p>
-                <h3 class="text-2xl font-bold text-slate-800">18</h3>
+                <h3 class="text-2xl font-bold text-slate-800" th:text="${totalMedicos != null ? totalMedicos : 0}">0</h3>
             </div>
         </div>
         <div class="bg-white border border-slate-100 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
             <div class="p-4 bg-slate-50 text-slate-600 rounded-xl"><i data-lucide="clipboard-list" class="w-6 h-6"></i></div>
             <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">En Consulta</p>
-                <h3 class="text-2xl font-bold text-slate-800">6</h3>
+                <h3 class="text-2xl font-bold text-slate-800">0</h3>
             </div>
         </div>
     </section>
@@ -55,19 +55,19 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
-            <tr class="hover:bg-slate-50/70 transition-all">
-                <td class="px-6 py-4 font-medium text-slate-500">1047444333</td>
+            <tr th:each="medico : ${listaMedicos}" class="hover:bg-slate-50/70 transition-all">
+                <td class="px-6 py-4 font-medium text-slate-500" th:text="${medico.id}">1000000</td>
                 <td class="px-6 py-4 flex items-center space-x-3">
                     <div class="w-10 h-10 bg-slate-200 rounded-full overflow-hidden border border-slate-100">
                         <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=100" alt="Doctor" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <h4 class="font-semibold text-slate-900">Dr. Alejandro Méndez</h4>
-                        <p class="text-xs text-slate-400">alejandro.m@clinicasalvador.com</p>
+                        <h4 class="font-semibold text-slate-900" th:text="${medico.nombreCompleto}">Nombre del Médico</h4>
+                        <p class="text-xs text-slate-400" th:text="${#strings.toLowerCase(medico.nombreCompleto).replace(' ', '') + '@clinicasalvador.com'}">correo@clinicasalvador.com</p>
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md uppercase tracking-wide">Cardiología</span>
+                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md uppercase tracking-wide" th:text="${medico.especialidad}">Especialidad</span>
                 </td>
                 <td class="px-6 py-4">
                     <div class="flex items-center space-x-2">
@@ -77,6 +77,11 @@
                 </td>
                 <td class="px-6 py-4 text-center">
                     <button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(listaMedicos)}">
+                <td colspan="5" class="px-6 py-10 text-center text-slate-400">
+                    No hay médicos registrados en la base de datos de Supabase. ¡Utilice el botón de Nuevo Registro!
                 </td>
             </tr>
             </tbody>
@@ -164,15 +169,18 @@
         }
     }
 
-    btnAbrir.addEventListener('click', () => toggleModal(true));
+    if(btnAbrir) {
+        btnAbrir.addEventListener('click', () => toggleModal(true));
+    }
     btnCancelar.addEventListener('click', () => toggleModal(false));
 
     formMedico.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const payload = {
             id: document.getElementById('cedula').value,
             nombreCompleto: document.getElementById('nombreCompleto').value,
-            especiality: document.getElementById('especialidad').value
+            specialty: document.getElementById('especialidad').value
         };
 
         try {
@@ -183,11 +191,11 @@
             });
 
             if (response.ok) {
-                alert('¡Éxito! Médico guardado en Supabase.');
+                alert('¡Éxito! Médico guardado correctamente.');
                 toggleModal(false);
-                location.reload();
+                location.reload(); // Recarga la página para ver el nuevo registro en la lista
             } else {
-                alert('Error: La cédula del profesional ya existe.');
+                alert('Error al guardar: Verifique que los datos sean correctos o el ID no esté duplicado.');
             }
         } catch (error) {
             alert('Fallo de conexión con Spring Boot.');
