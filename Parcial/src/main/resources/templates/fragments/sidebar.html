@@ -2,16 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="html_head">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clínica Salvador</title>
-    <!-- Cargamos Tailwind CSS para el estilizado moderno de los mockups -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Iconos Lucide (similares a los de tus diseños) -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
-<div th:fragment="nav_sidebar(activePage)" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 flex flex-col justify-between">
-    <!-- Bloque Superior: Branding -->
+<div th:fragment="nav_sidebar(activePage)" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 flex flex-col justify-between z-40">
     <div class="p-6">
         <div class="flex items-center space-x-3 text-[#0a3a82]">
             <i data-lucide="cross" class="w-8 h-8 fill-current text-blue-600"></i>
@@ -21,9 +19,7 @@
             </div>
         </div>
 
-        <!-- Menú de Navegación Principal -->
         <nav class="mt-8 space-y-1">
-            <!-- Item Médicos -->
             <a th:href="@{/medicos}"
                th:class="${activePage == 'medicos'}
                          ? 'flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-medium transition-all'
@@ -32,7 +28,6 @@
                 <span>Médicos</span>
             </a>
 
-            <!-- Item Pacientes -->
             <a th:href="@{/pacientes}"
                th:class="${activePage == 'pacientes'}
                          ? 'flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-medium transition-all'
@@ -41,7 +36,6 @@
                 <span>Pacientes</span>
             </a>
 
-            <!-- Item Citas -->
             <a th:href="@{/citas}"
                th:class="${activePage == 'citas'}
                          ? 'flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-medium transition-all'
@@ -52,9 +46,7 @@
         </nav>
     </div>
 
-    <!-- Bloque Inferior: Configuración y Salida -->
-    <div class="p-4 border-t border-gray-100 space-y-1">
-        <!-- Botón Nuevo Registro (Como el botón azul inferior de tus mockups) -->
+    <div class="p-4 border-t border-gray-100">
         <button id="btnNuevoRegistroGlobal" class="w-full bg-[#004bb4] text-white flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all shadow-md shadow-blue-200 mb-4">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Nuevo Registro</span>
@@ -71,7 +63,6 @@
     </div>
 </div>
 
-<!-- Script global para inicializar los íconos de Lucide en cualquier página -->
 <div th:fragment="lucide_init">
     <script>
         lucide.createIcons();
