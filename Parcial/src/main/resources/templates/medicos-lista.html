@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/sidebar :: html_head}"></head>
+<body class="bg-[#f8fafc] font-sans antialiased">
+
+<div th:replace="~{fragments/sidebar :: nav_sidebar('medicos')}"></div>
+
+<main class="ml-64 p-8">
+
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Gestión de Médicos</h1>
+            <p class="text-slate-500 text-sm mt-1">Administre el personal médico y sus horarios de disponibilidad.</p>
+        </div>
+        <div class="relative w-80">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </span>
+            <input type="text" placeholder="Buscar médico..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+        </div>
+    </header>
+
+    <section class="grid grid-cols-3 gap-6 mb-8">
+        <div class="bg-white border border-slate-100 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+            <div class="p-4 bg-blue-50 text-blue-600 rounded-xl">
+                <i data-lucide="users" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Médicos</p>
+                <h3 class="text-2xl font-bold text-slate-800">24</h3>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-100 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+            <div class="p-4 bg-emerald-50 text-emerald-600 rounded-xl">
+                <i data-lucide="check-circle" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Disponibles Hoy</p>
+                <h3 class="text-2xl font-bold text-slate-800">18</h3>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-100 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+            <div class="p-4 bg-slate-50 text-slate-600 rounded-xl">
+                <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">En Consulta</p>
+                <h3 class="text-2xl font-bold text-slate-800">6</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-4">Cédula</th>
+                <th class="px-6 py-4">Médico</th>
+                <th class="px-6 py-4">Especialidad</th>
+                <th class="px-6 py-4">Disponibilidad</th>
+                <th class="px-6 py-4 text-center">Acciones</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+            <tr class="hover:bg-slate-50/70 transition-all">
+                <td class="px-6 py-4 font-medium text-slate-500">001-2345678-9</td>
+                <td class="px-6 py-4 flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full overflow-hidden border border-slate-100">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=100" alt="Doctor" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-900">Dr. Alejandro Méndez</h4>
+                        <p class="text-xs text-slate-400">alejandro.m@clinicasalvador.com</p>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md uppercase tracking-wide">Cardiología</span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span class="text-slate-600 font-medium">Lunes - Viernes (08:00 - 16:00)</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-4 flex justify-between items-center text-xs font-medium text-slate-500">
+            <span>Mostrando 3 de 24 médicos registrados</span>
+            <div class="flex space-x-2">
+                <button class="p-1 border border-slate-200 rounded bg-white hover:bg-slate-50"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                <button class="p-1 border border-slate-200 rounded bg-white hover:bg-slate-50"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+        </footer>
+    </section>
+</main>
+
+<div id="modalMedico" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex justify-center items-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-[900px] rounded-2xl shadow-xl border border-slate-100 flex overflow-hidden transform scale-95 transition-all duration-300" id="modalContainer">
+
+        <div class="w-1/3 bg-slate-50 p-8 border-r border-slate-100 flex flex-col items-center justify-between">
+            <div class="w-full text-center">
+                <div class="w-40 h-40 border-2 border-dashed border-slate-300 rounded-2xl mx-auto flex flex-col items-center justify-center bg-white cursor-pointer hover:border-blue-500 hover:bg-blue-50/30 transition-all group">
+                    <i data-lucide="camera" class="w-8 h-8 text-slate-400 group-hover:text-blue-500 mb-2"></i>
+                    <span class="text-xs font-semibold text-slate-500 group-hover:text-blue-600">Fotografía de Perfil</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-3 px-4">Sube una imagen profesional para el expediente del médico.</p>
+            </div>
+
+            <div class="w-full border-t border-slate-200 pt-4 space-y-2 text-xs">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-medium">Estado</span>
+                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded-md">DISPONIBLE</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-medium">ID Temporal</span>
+                    <span class="text-slate-700 font-bold">#CS-2026-001</span>
+                </div>
+            </div>
+        </div>
+
+        <form class="w-2/3 p-8 space-y-6" id="formNuevoMedico">
+            <h2 class="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3">Información del Profesional</h2>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Cédula Profesional (ID)</label>
+                    <input type="text" id="cedula" placeholder="Ej. 12345678" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Nombre Completo</label>
+                    <input type="text" id="nombreCompleto" placeholder="Ej. Dr. Juan Pérez" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Especialidad</label>
+                <select id="especialidad" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Cardiología">Cardiología</option>
+                    <option value="Pediatría">Pediatría</option>
+                    <option value="Medicina General">Medicina General</option>
+                </select>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-600 uppercase tracking-wide block">Horario de Disponibilidad</label>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="border border-blue-200 bg-blue-50/50 p-2 rounded-xl text-xs">
+                        <p class="font-bold text-slate-500">Lunes</p>
+                        <p class="text-blue-700 font-bold mt-1">08:00 - 16:00</p>
+                    </div>
+                    <div class="border border-blue-200 bg-blue-50/50 p-2 rounded-xl text-xs">
+                        <p class="font-bold text-slate-500">Martes</p>
+                        <p class="text-blue-700 font-bold mt-1">08:00 - 16:00</p>
+                    </div>
+                    <div class="border border-slate-200 p-2 rounded-xl text-xs">
+                        <p class="font-bold text-slate-400">Miércoles</p>
+                        <p class="text-slate-400 mt-1">Sin Horario</p>
+                    </div>
+                    <div class="border border-blue-200 bg-blue-50/50 p-2 rounded-xl text-xs">
+                        <p class="font-bold text-slate-500">Jueves</p>
+                        <p class="text-blue-700 font-bold mt-1">10:00 - 18:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start space-x-3 text-xs text-blue-800">
+                <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
+                <div>
+                    <h4 class="font-bold text-blue-900 mb-0.5">Verificación de Credenciales</h4>
+                    <p class="text-blue-700 leading-relaxed">Al guardar, el sistema validará automáticamente la cédula profesional con la base de datos nacional de salud.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-2">
+                <button type="button" id="btnCancelar" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-200 transition-all">Cancelar</button>
+                <button type="submit" class="px-5 py-2.5 bg-[#004bb4] text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all shadow-md shadow-blue-200">Registrar Médico</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/sidebar :: lucide_init}"></div>
+
+<script>
+    const modal = document.getElementById('modalMedico');
+    const container = document.getElementById('modalContainer');
+    const btnAbrir = document.getElementById('btnNuevoRegistroGlobal');
+    const btnCancelar = document.getElementById('btnCancelar');
+
+    function toggleModal(open) {
+        if (open) {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-95');
+        } else {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            container.classList.add('scale-95');
+        }
+    }
+
+    btnAbrir.addEventListener('click', () => toggleModal(true));
+    btnCancelar.addEventListener('click', () => toggleModal(false));
+</script>
+</body>
+</html>
