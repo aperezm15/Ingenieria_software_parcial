@@ -170,9 +170,9 @@
     formMedico.addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
-            cedula: document.getElementById('cedula').value,
+            id: document.getElementById('cedula').value,
             nombreCompleto: document.getElementById('nombreCompleto').value,
-            especialidad: document.getElementById('especialidad').value
+            especiality: document.getElementById('especialidad').value
         };
 
         try {
