@@ -17,7 +17,7 @@ public class MedicoEntity {
     private String id; // Se usará la cédula/registro como Primary Key en Supabase
 
     private String nombreCompleto;
-    private String especialidad;
+    private String especialidad; // Mapea directo a la columna 'especialidad' de Supabase
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "medico_horarios", joinColumns = @JoinColumn(name = "medico_id"))

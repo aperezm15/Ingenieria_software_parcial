@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class MedicoRequestDTO {
     private String id; // Tu cédula / registro médico
     private String nombreCompleto;
-    private String specialty;
+    private String specialty; // Mantiene compatibilidad con el JSON del frontend
 }
