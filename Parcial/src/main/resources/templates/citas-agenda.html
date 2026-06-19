@@ -5,166 +5,78 @@
 
 <div th:replace="~{fragments/sidebar :: nav_sidebar('citas')}"></div>
 
-<main class="ml-64 p-8 flex space-x-6">
+<main class="ml-64 p-8">
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Consola de Citas</h1>
+            <p class="text-slate-500 text-sm mt-1">Cronograma de consultas médicas y asignaciones del día.</p>
+        </div>
+        <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm text-sm font-medium text-slate-700 flex items-center space-x-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+            <span th:text="${#temporals.format(#temporals.createNow(), 'EEEE, dd ''de'' MMMM ''de'' yyyy')}">Hoy, 25 de Junio de 2026</span>
+        </div>
+    </header>
 
-    <section class="flex-1">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Consola de Citas</h1>
-                <p class="text-slate-500 text-sm mt-1">Cronograma de consultas médicas y asignaciones del día.</p>
-            </div>
-            <div class="flex items-center space-x-2 bg-white px-4 py-2 border border-slate-200 rounded-lg shadow-sm text-sm font-semibold text-slate-700">
-                <i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i>
-                <span>Hoy, 25 de Junio de 2026</span>
-            </div>
-        </header>
+    <div class="grid grid-cols-3 gap-8">
+        <div class="col-span-2 space-y-4">
 
-        <div class="space-y-4">
-            <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex items-center justify-between hover:border-blue-300 transition-all">
-                <div class="flex items-center space-x-4">
-                    <div class="text-center bg-blue-50 text-[#004bb4] px-3 py-2 rounded-lg font-mono text-sm font-bold w-24">09:00 AM</div>
+            <div th:each="cita : ${listaCitas}" class="bg-white border border-slate-100 p-5 rounded-2xl flex items-center justify-between shadow-sm hover:shadow-md transition-all">
+                <div class="flex items-center space-x-5">
+                    <div class="px-3 py-2 bg-blue-50 text-blue-700 font-bold text-sm rounded-xl font-mono"
+                         th:text="${#temporals.format(cita.fechaHoraInicio, 'hh:mm a')}">
+                        09:00 AM
+                    </div>
                     <div>
-                        <div class="flex items-center space-x-2">
-                            <h4 class="font-bold text-slate-900">Carlos Mendoza</h4>
-                            <span class="text-xs text-slate-400 font-mono">(ID: 1098765432)</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-0.5 flex items-center">
-                            <i data-lucide="user-cog" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
-                            Dr. Alejandro Méndez — <span class="text-blue-700 font-semibold ml-1">Cardiología</span>
+                        <h4 class="font-bold text-slate-800 text-base">
+                            Paciente ID: <span class="text-slate-900 font-semibold" th:text="${cita.pacienteId}">1098765432</span>
+                        </h4>
+                        <p class="text-slate-500 text-xs mt-1 flex items-center">
+                            <i data-lucide="user" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
+                            Médico Asignado (ID): &nbsp;<span class="font-medium text-slate-700" th:text="${cita.medicoId}">Dr. Alejandro Méndez</span>
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-md uppercase tracking-wider">Agendada</span>
-                    <span class="text-slate-300 text-xs font-mono">APT-2026-001</span>
+
+                <div class="flex items-center space-x-4">
+                    <span th:class="${cita.estado == 'CANCELADA' ? 'px-3 py-1 bg-red-50 text-red-600 font-semibold text-xs rounded-full uppercase tracking-wider' : 'px-3 py-1 bg-green-50 text-green-600 font-semibold text-xs rounded-full uppercase tracking-wider'}"
+                          th:text="${cita.estado}">
+                        AGENDADA
+                    </span>
+                    <span class="text-slate-300 font-mono text-xs" th:text="${cita.codigoCita}">APT-2026-001</span>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(listaCitas)}" class="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-400 shadow-sm">
+                <i data-lucide="calendar-x" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
+                <p class="text-sm font-medium">No se registran consultas médicas programadas para el día de hoy.</p>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Ocupación de Agenda</h3>
+                    <span class="text-blue-600 font-bold text-sm" th:text="${totalCitas != null ? totalCitas * 10 : 0} + '%'">84%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div class="bg-blue-600 h-full transition-all duration-500" th:style="'width: ' + (${totalCitas != null ? totalCitas * 10 : 0}) + '%'"></div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-4">Saturación Semanal</h3>
+                <div class="flex items-end justify-between h-24 pt-2 px-2">
+                    <div class="w-8 bg-slate-100 h-12 rounded-t-lg"></div>
+                    <div class="w-8 bg-slate-100 h-16 rounded-t-lg"></div>
+                    <div class="w-8 bg-blue-600 h-20 rounded-t-lg"></div>
+                    <div class="w-8 bg-slate-100 h-10 rounded-t-lg"></div>
+                    <div class="w-8 bg-slate-100 h-14 rounded-t-lg"></div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <aside class="w-80 space-y-6 pt-20">
-        <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
-            <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider mb-4 flex items-center justify-between">
-                <span>Ocupación de Agenda</span><span class="text-blue-600 font-mono">84%</span>
-            </h3>
-            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4">
-                <div class="bg-[#004bb4] h-full rounded-full" style="width: 84%"></div>
-            </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
-            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-4">Saturación Semanal</h3>
-            <div class="flex items-end justify-between h-24 pt-2">
-                <div class="w-8 bg-slate-200 h-16 rounded-t-md"></div>
-                <div class="w-8 bg-slate-200 h-20 rounded-t-md"></div>
-                <div class="w-8 bg-[#004bb4] h-24 rounded-t-md"></div>
-                <div class="w-8 bg-slate-200 h-12 rounded-t-md"></div>
-                <div class="w-8 bg-slate-200 h-14 rounded-t-md"></div>
-            </div>
-        </div>
-    </aside>
+    </div>
 </main>
 
-<div id="modalCita" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex justify-center items-center opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-white w-[900px] rounded-2xl shadow-xl border border-slate-100 flex overflow-hidden transform scale-95 transition-all duration-300" id="modalContainer">
-
-        <div class="w-1/3 bg-slate-50 p-8 border-r border-slate-100 flex flex-col justify-between items-center">
-            <div class="text-center w-full">
-                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center mb-4"><i data-lucide="calendar-plus" class="w-8 h-8"></i></div>
-                <h3 class="font-bold text-slate-800 text-lg">Asignar Cita</h3>
-            </div>
-        </div>
-
-        <form class="w-2/3 p-8 space-y-5" id="formNuevaCita">
-            <h2 class="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3">Estructura de la Reserva</h2>
-
-            <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Código Único de Cita</label>
-                <input type="text" id="codigoCita" placeholder="Ej. APT-2026-003" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Cédula del Paciente</label>
-                    <input type="text" id="pacienteId" placeholder="Ej. 1098765432" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Cédula del Médico</label>
-                    <input type="text" id="medicoId" placeholder="Ej. 1047444333" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Fecha/Hora Inicio</label>
-                    <input type="datetime-local" id="fechaHoraInicio" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Fecha/Hora Fin</label>
-                    <input type="datetime-local" id="fechaHoraFin" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-            </div>
-
-            <div class="flex justify-end space-x-3 pt-4 border-t border-slate-100">
-                <button type="button" id="btnCancelar" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-200 transition-all">Cancelar</button>
-                <button type="submit" class="px-5 py-2.5 bg-[#004bb4] text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all">Agendar Espacio</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div th:replace="~{fragments/sidebar :: lucide_init}"></div>
-
-<script>
-    const modal = document.getElementById('modalCita');
-    const container = document.getElementById('modalContainer');
-    const btnAbrir = document.getElementById('btnNuevoRegistroGlobal');
-    const btnCancelar = document.getElementById('btnCancelar');
-    const formCita = document.getElementById('formNuevaCita');
-
-    function toggleModal(open) {
-        if (open) {
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            container.classList.remove('scale-95');
-        } else {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            container.classList.add('scale-95');
-            formCita.reset();
-        }
-    }
-
-    btnAbrir.addEventListener('click', () => toggleModal(true));
-    btnCancelar.addEventListener('click', () => toggleModal(false));
-
-    formCita.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            codigoCita: document.getElementById('codigoCita').value,
-            pacienteId: document.getElementById('pacienteId').value,
-            medicoId: document.getElementById('medicoId').value,
-            fechaHoraInicio: document.getElementById('fechaHoraInicio').value,
-            fechaHoraFin: document.getElementById('fechaHoraFin').value
-        };
-
-        try {
-            const response = await fetch('/api/v1/citas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                alert('¡Éxito! Cita agendada.');
-                toggleModal(false);
-                location.reload();
-            } else {
-                const errorText = await response.text();
-                alert('Restricción de Negocio:\n' + (errorText || 'Error de concurrencia o entidades no existentes.'));
-            }
-        } catch (error) {
-            alert('Fallo al conectar con el servidor.');
-        }
-    });
-</script>
 </body>
 </html>
