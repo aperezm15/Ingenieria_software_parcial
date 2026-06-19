@@ -26,6 +26,7 @@ public class MedicoRepositoryAdapter implements MedicoRepositoryPort {
                 .map(h -> new HorarioEntity(h.fechaHoraInicio(), h.fechaHoraFin(), h.disponible()))
                 .collect(Collectors.toList());
 
+        // Con el cambio en el Dominio, medico.getEspecialidad() ahora tiene el valor real e impecable
         MedicoEntity entityAsalvar = new MedicoEntity(
                 medico.getId(),
                 medico.getNombreCompleto(),
@@ -47,6 +48,7 @@ public class MedicoRepositoryAdapter implements MedicoRepositoryPort {
 
     // Método helper privado para convertir de Entidad JPA a Modelo de Dominio Puro
     private Medico mapearADominio(MedicoEntity entity) {
+        // Al reconstruir el dominio, le inyectamos la especialidad que viene de Supabase
         Medico medicoDomain = new Medico(entity.getId(), entity.getNombreCompleto(), entity.getEspecialidad());
 
         if (entity.getAgendaDisponibilidad() != null) {

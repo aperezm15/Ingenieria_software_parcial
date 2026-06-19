@@ -1,5 +1,6 @@
 package org.udc.parcial.domain.ports.in; // Ajusta a tu paquete real
 
+import org.springframework.stereotype.Service;
 import org.udc.parcial.domain.models.Cita;
 import org.udc.parcial.domain.ports.in.AgendarCitaUseCase;
 import org.udc.parcial.domain.ports.out.CitaRepositoryPort; // Ajusta según tu puerto de salida
@@ -7,6 +8,7 @@ import org.udc.parcial.domain.ports.out.CitaRepositoryPort; // Ajusta según tu 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AgendarCitaUseCaseImpl implements AgendarCitaUseCase {
 
     private final CitaRepositoryPort citaRepositoryPort;
