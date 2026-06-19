@@ -20,10 +20,6 @@ public class Medico {
         this.agendaDisponibilidad = new ArrayList<>();
     }
 
-    /**
-     * REGLA DE NEGOCIO CRÍTICA (HU-01):
-     * Permite agregar un horario a la agenda del médico asegurando que no se traslape con otro.
-     */
     public void agregarHorarioAlDominio(Horario nuevoHorario) {
         for (Horario h : agendaDisponibilidad) {
             // Fórmula lógica para detectar si dos rangos de tiempo se cruzan
@@ -37,7 +33,6 @@ public class Medico {
         this.agendaDisponibilidad.add(nuevoHorario);
     }
 
-    // Getters manuales (Java Puro, protegiendo la encapsulación de la lista)
     public String getId() { return id; }
     public String getNombreCompleto() { return nombreCompleto; }
     public String getSpecialty() { return specialty; }
