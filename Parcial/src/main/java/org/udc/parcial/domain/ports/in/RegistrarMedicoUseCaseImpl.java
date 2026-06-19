@@ -6,6 +6,8 @@ import org.udc.parcial.domain.ValueObjects.Horario;
 import org.udc.parcial.domain.ports.in.RegistrarMedicoUseCase;
 import org.udc.parcial.domain.ports.out.MedicoRepositoryPort;
 
+import java.util.Optional;
+
 @Service // Le dice a Spring que esta es la implementación válida para el controlador
 public class RegistrarMedicoUseCaseImpl implements RegistrarMedicoUseCase {
 
@@ -17,7 +19,11 @@ public class RegistrarMedicoUseCaseImpl implements RegistrarMedicoUseCase {
 
     @Override
     public Medico ejecutarRegistro(Medico medico) {
-        // Aquí se conecta con tu adaptador de Supabase que ya funciona
+        Optional<Medico> medicoExistente = medicoRepositoryPort.buscarPorId(medico.getId());
+
+        if (medicoExistente.isPresent()) {
+            throw new IllegalStateException("Error: Medico existente");
+        }
         return medicoRepositoryPort.guardar(medico);
     }
 

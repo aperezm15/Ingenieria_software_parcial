@@ -18,6 +18,11 @@ public class RegistrarPacienteUseCaseImpl implements RegistrarPacienteUseCase {
 
     @Override
     public Paciente ejecutarRegistro(Paciente paciente) {
+        Optional<Paciente> pacienteExistente = pacienteRepositoryPort.buscarPorId(paciente.getId());
+
+        if (pacienteExistente.isPresent()) {
+            throw new IllegalStateException("Error: Paciente existente");
+        }
         return pacienteRepositoryPort.guardar(paciente);
     }
 
