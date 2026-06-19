@@ -1,4 +1,4 @@
-package org.udc.parcial.domain.models.ValueObjects;
+package org.udc.parcial.domain.ValueObjects;
 
 import java.time.LocalDateTime;
 

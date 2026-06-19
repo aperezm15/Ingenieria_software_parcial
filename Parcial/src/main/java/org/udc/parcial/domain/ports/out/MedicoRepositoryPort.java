@@ -1,4 +1,4 @@
-package org.udc.parcial.domain.models.ports.out;
+package org.udc.parcial.domain.ports.out;
 
 import org.udc.parcial.domain.models.Medico;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package org.udc.parcial.domain.models;
 
-import org.udc.parcial.domain.models.ValueObjects.Horario;
+import org.udc.parcial.domain.ValueObjects.Horario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Medico {
 
     public String getId() { return id; }
     public String getNombreCompleto() { return nombreCompleto; }
-    public String getSpecialty() { return specialty; }
+    public String getEspecialidad() { return specialty; }
     public List<Horario> getAgendaDisponibilidad() {
         return new ArrayList<>(agendaDisponibilidad); // Retorna una copia para evitar modificaciones externas ilegales
     }

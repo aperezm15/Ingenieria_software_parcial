@@ -1,7 +1,7 @@
-package org.udc.parcial.domain.models.ports.in;
+package org.udc.parcial.domain.ports.in;
 
 import org.udc.parcial.domain.models.Medico;
-import org.udc.parcial.domain.models.ValueObjects.Horario;
+import org.udc.parcial.domain.ValueObjects.Horario;
 
 public interface RegistrarMedicoUseCase {
     // Caso de uso 1: Registrar un médico en el sistema
